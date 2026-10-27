@@ -1,0 +1,33 @@
+apiVersion: v1
+entries:
+  dynacat:
+  - annotations:
+      artifacthub.io/license: MIT
+      artifacthub.io/links: |
+        - name: Dynacat
+          url: https://github.com/Panonim/dynacat
+        - name: Dynacat configuration
+          url: https://github.com/Panonim/dynacat/blob/main/docs/docs/configuration.md
+    apiVersion: v2
+    created: "2026-10-27T19:48:17.541697778Z"
+    description: Dynacat, a Glance-based dashboard with a web UI editor
+    digest: 9f5cda667227b6ed876ce545e161c3b40176dcbfa8590e4382f1ca58618c59f8
+    home: https://github.com/dawidd6/charts/tree/master/dynacat
+    icon: https://raw.githubusercontent.com/Panonim/dynacat/main/docs/docs/logo.png
+    keywords:
+    - dynacat
+    - glance
+    - dashboard
+    - homelab
+    maintainers:
+    - name: dawidd6
+      url: https://github.com/dawidd6
+    name: dynacat
+    sources:
+    - https://github.com/dawidd6/charts
+    - https://github.com/Panonim/dynacat
+    type: application
+    urls:
+    - https://github.com/dawidd6/charts/releases/download/dynacat-0.1.0/dynacat-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-10-27T19:48:17.541702845Z"
