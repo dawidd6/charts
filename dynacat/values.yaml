@@ -1,0 +1,75 @@
+image:
+  repository: docker.io/panonim/dynacat
+  tag: 3.0.2
+  pullPolicy: IfNotPresent
+
+# Contents of dynacat.yml, see https://github.com/Panonim/dynacat/blob/main/docs/docs/configuration.md
+# ${ENV_VAR} references are resolved by Dynacat from the container environment (see env/envFrom).
+config:
+  pages:
+    - name: Home
+      columns:
+        - size: full
+          widgets:
+            - type: clock
+
+# The config is copied from a ConfigMap into a writable directory, because the web UI editor saves to it.
+# Without persistence that directory is an emptyDir: every pod start begins from config and UI edits are lost on restart.
+# With persistence the config is copied only once; afterwards the UI owns it (delete dynacat.yml on the volume to re-seed).
+persistence:
+  enabled: false
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  existingClaim: ""
+
+env: {}
+  # OIDC_CLIENT_SECRET:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: dynacat-secrets
+  #       key: client-secret
+envFrom: []
+
+service:
+  type: ClusterIP
+  port: 8080
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+    # - host: dynacat.example.com
+    #   paths:
+    #     - path: /
+    #       pathType: Prefix
+  tls: []
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+resources: {}
+podAnnotations: {}
+podLabels: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

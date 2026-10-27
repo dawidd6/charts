@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dynacat.fullname" . }}
+  labels:
+    {{- include "dynacat.labels" . | nindent 4 }}
+data:
+  dynacat.yml: |
+    {{- toYaml .Values.config | nindent 4 }}
