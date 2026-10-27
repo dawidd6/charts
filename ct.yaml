@@ -1,0 +1,8 @@
+# chart-testing config, see https://github.com/helm/chart-testing#configuration
+chart-dirs:
+  - .
+target-branch: master
+github-groups: true
+validate-maintainers: true
+upgrade: true
+skip-missing-values: true

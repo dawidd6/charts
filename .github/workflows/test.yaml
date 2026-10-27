@@ -1,0 +1,45 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: 3.x
+          check-latest: true
+
+      - uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
+
+      - name: List changed charts
+        id: list-changed
+        run: |
+          if [[ -n "$(ct list-changed --config ct.yaml)" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Lint
+        if: github.event_name == 'push' || steps.list-changed.outputs.changed == 'true'
+        run: ct lint --config ct.yaml ${{ github.event_name == 'push' && '--all --check-version-increment=false' || '' }}
+
+      - uses: helm/kind-action@1544676c07bb3570fcb70166beaa07c4528fd4aa # v1.15.1
+        if: github.event_name == 'push' || steps.list-changed.outputs.changed == 'true'
+
+      - name: Install
+        if: github.event_name == 'push' || steps.list-changed.outputs.changed == 'true'
+        run: ct install --config ct.yaml ${{ github.event_name == 'push' && '--all' || '' }}
